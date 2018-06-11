@@ -1,15 +1,24 @@
-const gridSize = 16;
-let cellCount = gridSize ** 2;
-for (let i = 0; i < cellCount; i++) {
-	makeCell(cellCount, gridSize, i + 1);
-}
+let grid = makeSquareGrid();
+const resetButton = document.getElementById('reset');
+resetButton.addEventListener('click', event => makeSquareGrid(resetGrid(grid)));
 
-const gridCell = document.querySelectorAll('.grid-item');
-gridCell.forEach(
-	function (cellValue) {
-		cellValue.addEventListener('mouseenter', event => changeCellColor(cellValue.id));
+/* ***************************************************************** */
+
+function makeSquareGrid(gridSize = 16) {
+	const cellCount = gridSize ** 2;
+	for (let i = 0; i < cellCount; i++) {
+		makeCell(cellCount, gridSize, i + 1);
 	}
-);
+
+	const gridCell = document.querySelectorAll('.grid-item');
+	gridCell.forEach(
+		function (cellValue) {
+			cellValue.addEventListener('mouseenter', event => changeCellColor(cellValue.id));
+		}
+	);
+
+	return gridCell;
+}
 
 function makeCell(cellCount, gridSize, id) {
 	const gridContainer = document.querySelector('.grid-container');
@@ -60,3 +69,18 @@ function changeCellColor(cellId) {
 			currentCell.style.backgroundColor = 'rgb(0, 0 ,0)';
 			break;
 	}}
+
+function resetGrid() {
+	let oldGrid = document.querySelector('.grid-container');
+	while (oldGrid.firstChild) {
+		oldGrid.removeChild(oldGrid.firstChild)
+	}
+
+	oldGrid.style.gridTemplateColumns = null;
+
+	let newGridSize = prompt('Enter a grid size.', 16);
+	while (newGridSize === NaN || newGridSize < 1) {
+		newGridSize = prompt('Invalid Entry. Enter a grid size.', 16);
+	}
+	return newGridSize;
+}
